@@ -2,6 +2,8 @@
 
 *A Git-backed key-value store, for tracking changes to documents and other files over time.*
 
+[![Gem Version](https://badge.fury.io/rb/change_agent.svg)](http://badge.fury.io/rb/change_agent) [![Build Status](https://travis-ci.org/benbalter/change_agent.svg)](https://travis-ci.org/benbalter/change_agent)
+
 ### A git-backed key value store sounds like a terrible idea. Why would you do that?
 
 Let's say you're building a scraper to see when Members of Congress post press releases to their websites and to track how those press releases change over time. You could build a purpose-built application, store each revision in a database, and then build an interface to view all the known press releases and compare their history. Stop the insanity!
