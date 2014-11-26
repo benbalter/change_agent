@@ -76,4 +76,14 @@ class TestChangeAgentDocument < Minitest::Test
     @document.delete
     refute File.exists? @document.path
   end
+
+  should "clobber conflicting namespace" do
+    File.write "foo", File.expand_path("foo", tempdir)
+    doc = ChangeAgent::Document.new("foo/bar", tempdir)
+    doc.contents = "baz"
+    doc.write
+    path = File.expand_path("foo/bar", tempdir)
+    assert File.exists? path
+    assert_equal "baz", File.open(path).read
+  end
 end

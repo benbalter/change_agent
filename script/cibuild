@@ -1,7 +1,5 @@
 #!/bin/sh
 
-set -e
-
 git config --get user.name > /dev/null
 if [ $? -eq 1 ]; then
    git config --global user.name "Your Name"
