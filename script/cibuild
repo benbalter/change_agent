@@ -1,3 +1,6 @@
+#!/bin/sh
+
+set -e
 
 git config --get user.name > /dev/null
 if [ $? -eq 1 ]; then
@@ -10,3 +13,7 @@ if [ $? -eq 1 ]; then
 fi
 
 bundle exec rake test
+
+rm -Rf tmp
+
+gem build change_agent.gemspec
