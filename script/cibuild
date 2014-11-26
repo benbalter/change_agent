@@ -14,6 +14,6 @@ fi
 
 bundle exec rake test
 
-rm -Rf tmp
-
 gem build change_agent.gemspec
+
+rm -Rf tmp
