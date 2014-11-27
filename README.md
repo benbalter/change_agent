@@ -58,7 +58,7 @@ change_agent.get("foo")
 
 ### Pushing and pulling
 
-Ready to push your Git repo to a server? Assuming you've already got a remote set up, it's as simple as
+Ready to push your Git repo to a server? It's as simple as:
 
 ```ruby
 # add a remote (if there's not already one from the clone)
