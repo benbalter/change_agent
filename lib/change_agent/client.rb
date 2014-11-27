@@ -3,12 +3,20 @@ module ChangeAgent
 
     attr_accessor :directory
 
-    def initialize(directory=nil)
+    def initialize(directory=nil, remote=nil)
       @directory = File.realpath(directory || Dir.pwd)
+      @remote = remote
     end
 
     def git
-      @git ||= Git.init directory
+      # Git repo already exists, don't do anything but load it
+      @git ||= Git.open directory
+    rescue ArgumentError
+      if @remote.nil? # init a new repo at the given path
+        @git ||= Git.init directory
+      else # Clone a repo from a remote
+        @git ||= Git.clone @remote, directory
+      end
     end
 
     def set(key, value)

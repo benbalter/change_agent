@@ -11,6 +11,13 @@ class TestChangeAgentClient < Minitest::Test
     assert_equal tempdir, @client.directory
   end
 
+  should "clone into existing repos" do
+    repo = "https://github.com/benbalter/change_agent"
+    agent = ChangeAgent::Client.new(tempdir, repo)
+    assert_equal repo, agent.git.remotes.first.url
+    assert Dir.entries(tempdir).count > 5
+  end
+
   should "default to the pwd" do
     assert_equal Dir.pwd, ChangeAgent::Client.new.directory
   end

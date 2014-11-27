@@ -43,6 +43,17 @@ change_agent.get "foo/bar"
 
 It's really up to you, but you'll get performance and usability bumps the more you namespace. I'd recommend thinking about what you want the Git repo to look like when browse, and work backwards from there.
 
+### Cloning an existing repo / datastore
+
+```ruby
+repo = "https://github.com/benbalter/some_repo"
+directory = "data"
+change_agent = ChangeAgent::Client.new(directory, repo)
+
+change_agent.get("foo")
+=> "bar"
+```
+
 ### Pushing and pulling
 
 Ready to push your Git repo to a server? Assuming you've already got a remote set up, it's as simple as
