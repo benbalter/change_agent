@@ -12,6 +12,8 @@ But wait. What if I told you you could just commit each press release to Git, an
 
 Having built the first app more times then I'd like to admit, I thought I'd make a Gem to facilitate building lightweight apps that use Git to track changes to scraped documents (or whatever you want, really).
 
+Want to see it in action? Check out [this lightweight demo](https://github.com/benbalter/change_agent_demo), scrapping the White House RSS feed.
+
 ## Okay, I'm sold. How do I use it?
 
 ChangeAgent writes values to the file system based on a given key, and immediately commits the file to Git, providing you with both a snapshot and a timestamp for every change.
