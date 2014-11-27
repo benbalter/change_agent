@@ -16,8 +16,8 @@ module ChangeAgent
       raise InvalidKey unless path_in_repo?
     end
 
-    def git
-      @client.git
+    def repo
+      @client.repo
     end
 
     # base dir for repo
@@ -51,12 +51,25 @@ module ChangeAgent
     end
 
     def commit
-      git.add(path)
-      git.commit "Updating #{path}"
+      # stage
+      index = repo.index
+      index.add path: key,
+        oid: (Rugged::Blob.from_workdir repo, key),
+        mode: 0100644
+      commit_tree = index.write_tree repo
+      index.write
+
+      # commit
+      Rugged::Commit.create repo,
+        message: "Updating #{key}",
+        parents: repo.empty? ? [] : [ repo.head.target ].compact,
+        tree: commit_tree,
+        update_ref: 'HEAD'
     end
 
     def delete
-      git.remove(path)
+      File.delete path
+      repo.index.remove(key)
     end
 
     def inspect
@@ -82,7 +95,10 @@ module ChangeAgent
       relative_path.split("/").each do |part|
         dirs.push part
         file = File.expand_path(dirs.join("/"), tempdir)
-        File.delete file if File.file? file
+        if File.file? file
+          File.delete file
+          repo.index.remove(dirs.join("/"))
+        end
       end
       FileUtils.mkdir_p directory
     end

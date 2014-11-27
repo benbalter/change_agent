@@ -8,14 +8,14 @@ module ChangeAgent
       @remote = remote
     end
 
-    def git
+    def repo
       # Git repo already exists, don't do anything but load it
-      @git ||= Git.open directory
-    rescue ArgumentError
+      @repo ||= Rugged::Repository.new directory
+    rescue Rugged::RepositoryError
       if @remote.nil? # init a new repo at the given path
-        @git ||= Git.init directory
+        @repo ||= Rugged::Repository.init_at directory
       else # Clone a repo from a remote
-        @git ||= Git.clone @remote, directory
+        @repo ||= Rugged::Repository.clone_at @remote, directory
       end
     end
 

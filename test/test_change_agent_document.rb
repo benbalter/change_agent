@@ -22,7 +22,7 @@ class TestChangeAgentDocument < Minitest::Test
   end
 
   should "expose the git client" do
-    assert_equal Git::Base, @document.git.class
+    assert_equal Rugged::Repository, @document.repo.class
   end
 
   should "calcuate the base_dir" do
@@ -65,8 +65,7 @@ class TestChangeAgentDocument < Minitest::Test
   should "commit the document to the repo" do
     @document.contents = "bar"
     @document.write
-    assert_equal 1, @document.git.log.count
-    assert_equal "Updating #{@document.path}", @document.git.log.first.message
+    assert_equal "Updating #{@document.key}", @document.repo.last_commit.message
   end
 
   should "delete the document" do

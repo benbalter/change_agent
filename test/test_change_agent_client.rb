@@ -14,7 +14,7 @@ class TestChangeAgentClient < Minitest::Test
   should "clone into existing repos" do
     repo = "https://github.com/benbalter/change_agent"
     agent = ChangeAgent::Client.new(tempdir, repo)
-    assert_equal repo, agent.git.remotes.first.url
+    assert_equal repo, agent.repo.remotes.first.url
     assert Dir.entries(tempdir).count > 5
   end
 
@@ -23,9 +23,8 @@ class TestChangeAgentClient < Minitest::Test
   end
 
   should "init the git object" do
-    assert_equal Git::Base, @client.git.class
-    expected = File.expand_path ".git", tempdir
-    assert_equal expected, @client.git.repo.path
+    assert_equal Rugged::Repository, @client.repo.class
+    assert_equal tempdir + "/.git/", @client.repo.path
   end
 
   should "store a value" do
