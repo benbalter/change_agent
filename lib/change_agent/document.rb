@@ -62,7 +62,7 @@ module ChangeAgent
       tree = repo.head.target.tree
       path.split("/").each do |part|
         file = dirs.push(part).join("/")
-        delete(file) if tree.path(file)
+        delete(file) if tree.path(file) && tree.path(file)[:type] == :blob
       end
     rescue Rugged::TreeError
       nil

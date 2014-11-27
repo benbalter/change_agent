@@ -66,4 +66,16 @@ class TestChangeAgentDocument < Minitest::Test
     doc.write
     assert_equal "baz", @client.get("foo/bar")
   end
+
+  should "allow two files in the same folder" do
+    doc = ChangeAgent::Document.new("foo/bar", @client)
+    doc.contents = "baz"
+    doc.write
+    assert_equal "baz", @client.get("foo/bar")
+
+    doc = ChangeAgent::Document.new("foo/bar2", @client)
+    doc.contents = "baz2"
+    doc.write
+    assert_equal "baz2", @client.get("foo/bar2")
+  end
 end
