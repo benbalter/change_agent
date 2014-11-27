@@ -27,7 +27,6 @@ module ChangeAgent
     end
 
     def save
-      clean_path
       oid = repo.write contents, :blob
       repo.index.add(path: path, oid: oid, mode: 0100644)
 
@@ -56,18 +55,6 @@ module ChangeAgent
     end
 
     private
-
-    def clean_path
-      return if repo.empty?
-      dirs = []
-      tree = repo.head.target.tree
-      path.split("/").each do |part|
-        file = dirs.push(part).join("/")
-        delete(file) if tree.path(file) && tree.path(file)[:type] == :blob
-      end
-    rescue Rugged::TreeError
-      nil
-    end
 
     def blob_contents
       tree = repo.head.target.tree

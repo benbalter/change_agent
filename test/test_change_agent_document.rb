@@ -57,16 +57,6 @@ class TestChangeAgentDocument < Minitest::Test
     assert_equal "Removing #{@document.key}", @document.repo.last_commit.message
   end
 
-  should "clobber conflicting namespace" do
-    @document.contents = "bar"
-    @document.write
-
-    doc = ChangeAgent::Document.new("foo/bar", @client)
-    doc.contents = "baz"
-    doc.write
-    assert_equal "baz", @client.get("foo/bar")
-  end
-
   should "allow two files in the same folder" do
     doc = ChangeAgent::Document.new("foo/bar", @client)
     doc.contents = "baz"
@@ -81,7 +71,7 @@ class TestChangeAgentDocument < Minitest::Test
 
   should "know if a file's changed" do
     refute @document.changed?
-    
+
     @client.set "foo", "bar"
     refute @document.changed?
 
