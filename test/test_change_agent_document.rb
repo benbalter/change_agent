@@ -78,7 +78,9 @@ class TestChangeAgentDocument < Minitest::Test
   end
 
   should "clobber conflicting namespace" do
-    File.write File.expand_path("foo", tempdir), "bar"
+    @document.contents = "bar"
+    @document.write
+
     doc = ChangeAgent::Document.new("foo/bar", tempdir)
     doc.contents = "baz"
     doc.write
