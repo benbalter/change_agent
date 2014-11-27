@@ -1,12 +1,9 @@
 #!/bin/sh
 
-git config --get user.name > /dev/null
-if [ $? -eq 1 ]; then
-  git config --global user.name "Your Name"
-fi
+set -e
 
-git config --get user.email > /dev/null
-if [ $? -eq 1 ]; then
+if [ "$CI" = "true" ]; then
+  git config --global user.name "Your Name"
   git config --global user.email "you@example.com"
 fi
 
