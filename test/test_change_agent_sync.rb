@@ -5,7 +5,7 @@ class TestChangeAgentSync < Minitest::Test
   def setup
     init_tempdir
     @client = ChangeAgent::Client.new tempdir
-    @demo = ChangeAgent::Client.new "https://github.com/benbalter/change_agent_demo"
+    @demo = ChangeAgent::Client.new tempdir, "http://github.com/benbalter/change_agent_demo"
   end
 
   def teardown
