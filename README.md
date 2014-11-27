@@ -48,7 +48,7 @@ It's really up to you, but you'll get performance and usability bumps the more y
 ### Cloning an existing repo / datastore
 
 ```ruby
-repo = "https://github.com/benbalter/some_repo"
+repo = "https://github.com/benbalter/change_agent_demo"
 directory = "data"
 change_agent = ChangeAgent::Client.new(directory, repo)
 
@@ -61,11 +61,17 @@ change_agent.get("foo")
 Ready to push your Git repo to a server? Assuming you've already got a remote set up, it's as simple as
 
 ```ruby
+# add a remote (if there's not already one from the clone)
+change_agent.add_remote "origin", "https://github.com/benbalter/change_agent_demo"
+
 # pull in the latest data
-change_agent.git.pull
+change_agent.pull
 
 # push the data
-change_agent.git.push
+change_agent.push
+
+# do both
+change_agent.sync
 ```
 
 ## Project status
