@@ -1,6 +1,7 @@
 module ChangeAgent
   class Client
 
+    include ChangeAgent::Sync
     attr_accessor :directory
 
     def initialize(directory=nil, remote=nil)
@@ -12,7 +13,7 @@ module ChangeAgent
       if @remote.nil?
         @repo ||= Rugged::Repository.init_at directory
       else
-        @repo ||= Rugged::Repository.clone_at @remote, directory
+        @repo ||= Rugged::Repository.clone_at @remote, directory, {:credentials => credentials}
       end
     end
 
@@ -39,5 +40,6 @@ module ChangeAgent
     def inspect
       "#<ChangeAgent::Client repo=\"#{directory}\">"
     end
+
   end
 end
