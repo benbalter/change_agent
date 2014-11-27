@@ -6,8 +6,8 @@ require 'pathname'
 
 module ChangeAgent
 
-  def self.init(directory=nil)
-    Client.new(directory)
+  def self.init(directory=nil, remote=nil)
+    Client.new(directory, remote)
   end
 
 end
