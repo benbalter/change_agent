@@ -4,7 +4,7 @@ module ChangeAgent
     attr_accessor :directory
 
     def initialize(directory=nil)
-      @directory = File.expand_path(directory || Dir.pwd)
+      @directory = File.realpath(directory || Dir.pwd)
     end
 
     def git

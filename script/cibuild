@@ -2,7 +2,7 @@
 
 git config --get user.name > /dev/null
 if [ $? -eq 1 ]; then
-   git config --global user.name "Your Name"
+  git config --global user.name "Your Name"
 fi
 
 git config --get user.email > /dev/null
@@ -11,7 +11,5 @@ if [ $? -eq 1 ]; then
 fi
 
 bundle exec rake test
-
-gem build change_agent.gemspec
 
 rm -Rf tmp

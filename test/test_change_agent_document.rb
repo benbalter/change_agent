@@ -78,12 +78,18 @@ class TestChangeAgentDocument < Minitest::Test
   end
 
   should "clobber conflicting namespace" do
-    File.write "foo", File.expand_path("foo", tempdir)
+    File.write File.expand_path("foo", tempdir), "bar"
     doc = ChangeAgent::Document.new("foo/bar", tempdir)
     doc.contents = "baz"
     doc.write
     path = File.expand_path("foo/bar", tempdir)
     assert File.exists? path
     assert_equal "baz", File.open(path).read
+  end
+
+  should "reject invalid keys" do
+    assert_raises ChangeAgent::InvalidKey do
+      assert ChangeAgent::Document.new("../foo/bar", tempdir)
+    end
   end
 end
