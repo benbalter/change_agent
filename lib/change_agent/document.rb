@@ -42,11 +42,11 @@ module ChangeAgent
 
     def delete(file=path)
       repo.index.remove(file)
-      commit_tree = repo.index.write_tree repo
+
       Rugged::Commit.create repo,
         message: "Removing #{path}",
         parents: [repo.head.target],
-        tree: commit_tree,
+        tree: repo.index.write_tree(repo),
         update_ref: 'HEAD'
     end
 
