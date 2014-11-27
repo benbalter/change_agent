@@ -74,6 +74,16 @@ change_agent.push
 change_agent.sync
 ```
 
+### Authentication
+
+Rugged supports authentication via user/pass and sshkey. For more information see [Rugged](https://github.com/libgit2/rugged/blob/master/lib/rugged/credentials.rb). Here's an example of how you might implement authentication for pushes and pulling from private remotes.
+
+```ruby
+change_agent = ChangeAgent::Client.new "data", "https://github.com/benbalter/change_agent_demo"
+creds = Rugged:Credentials::UserPassword.new :username => "benbalter", :password => "passw0rd"
+change_agent.credentials = creds
+```
+
 ## Project status
 
 Initial proof of concept
