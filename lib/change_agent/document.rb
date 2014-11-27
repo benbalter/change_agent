@@ -31,17 +31,13 @@ module ChangeAgent
     def write
       clean_path
       oid = repo.write contents, :blob
-      index = repo.index
-      index.read_tree(repo.head.target.tree) unless repo.empty?
-      index.add(:path => path, :oid => oid, :mode => 0100644)
+      repo.index.add(path: path, oid: oid, mode: 0100644)
 
-      options = {}
-      options[:tree] = index.write_tree(repo)
-      options[:message] ||= "Updating #{path}"
-      options[:parents] = repo.empty? ? [] : [ repo.head.target ]
-      options[:update_ref] = 'HEAD'
-
-      Rugged::Commit.create(repo, options)
+      Rugged::Commit.create repo,
+        message: "Updating #{path}",
+        parents: repo.empty? ? [] : [ repo.head.target ],
+        tree: repo.index.write_tree(repo),
+        update_ref: 'HEAD'
     end
 
     def delete(file=path)
