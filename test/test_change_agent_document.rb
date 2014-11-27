@@ -4,12 +4,17 @@ class TestChangeAgentDocument < Minitest::Test
 
   def setup
     init_tempdir
-    @document = ChangeAgent::Document.new("foo", tempdir)
-    @namespaced_document = ChangeAgent::Document.new("bar/foo", tempdir)
+    @client = ChangeAgent::Client.new tempdir
+    @document = ChangeAgent::Document.new("foo", @client)
+    @namespaced_document = ChangeAgent::Document.new("bar/foo", @client)
   end
 
-  should "store the document key on init" do
-    assert_equal "foo", @document.key
+  def teardown
+    FileUtils.rm_rf tempdir
+  end
+
+  should "store the document path on init" do
+    assert_equal "foo", @document.path
   end
 
   should "accept a client if passed" do
@@ -25,41 +30,16 @@ class TestChangeAgentDocument < Minitest::Test
     assert_equal Rugged::Repository, @document.repo.class
   end
 
-  should "calcuate the base_dir" do
-    assert_equal tempdir, @document.base_dir
-  end
-
-  should "calcuate the directory" do
-    assert_equal tempdir, @document.directory
-
-    expected = File.expand_path "bar", tempdir
-    assert_equal expected, @namespaced_document.directory
-  end
-
-  should "know the file path" do
-    expected = File.expand_path "foo", tempdir
-    assert_equal expected, @document.path
-
-    expected = File.expand_path "bar/foo", tempdir
-    assert_equal expected, @namespaced_document.path
-  end
-
-  should "know if a file exists" do
-    refute @document.exists?
-    FileUtils.touch @document.path
-    assert @document.exists?
-  end
-
   should "read a file's contents" do
-    File.write @document.path, "bar"
+    @document.contents = "bar"
+    @document.write
     assert_equal "bar", @document.contents
   end
 
   should "write a file's contents" do
     @document.contents = "bar"
-    assert_equal "bar", @document.contents
     @document.write
-    assert_equal "bar", File.open(@document.path).read
+    assert_equal "bar", @client.get("foo")
   end
 
   should "commit the document to the repo" do
@@ -71,26 +51,19 @@ class TestChangeAgentDocument < Minitest::Test
   should "delete the document" do
     @document.contents = "bar"
     @document.write
-    assert File.exists? @document.path
+    assert @client.get "foo"
     @document.delete
-    refute File.exists? @document.path
+    refute @client.get "foo"
+    assert_equal "Removing #{@document.key}", @document.repo.last_commit.message
   end
 
   should "clobber conflicting namespace" do
     @document.contents = "bar"
     @document.write
 
-    doc = ChangeAgent::Document.new("foo/bar", tempdir)
+    doc = ChangeAgent::Document.new("foo/bar", @client)
     doc.contents = "baz"
     doc.write
-    path = File.expand_path("foo/bar", tempdir)
-    assert File.exists? path
-    assert_equal "baz", File.open(path).read
-  end
-
-  should "reject invalid keys" do
-    assert_raises ChangeAgent::InvalidKey do
-      assert ChangeAgent::Document.new("../foo/bar", tempdir)
-    end
+    assert_equal "baz", @client.get("foo/bar")
   end
 end

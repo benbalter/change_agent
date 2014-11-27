@@ -1,106 +1,75 @@
 module ChangeAgent
-  class InvalidKey < ArgumentError; end
-
   class Document
 
-    attr_accessor :key
     attr_writer :contents
+    attr_accessor :path
+    alias_method :key, :path
 
-    def initialize(key, client_or_directory=nil)
-      @key = key
+    def initialize(path, client_or_directory=nil)
+      @path = path
       if client_or_directory.class == ChangeAgent::Client
         @client = client_or_directory
       else
         @client = ChangeAgent::Client.new(client_or_directory)
       end
-      raise InvalidKey unless path_in_repo?
     end
 
     def repo
       @client.repo
     end
 
-    # base dir for repo
-    def base_dir
-      @client.directory
-    end
-
-    # directory containing file
-    def directory
-      @directory ||= File.dirname(path)
-    end
-
-    def path
-      File.expand_path key, base_dir
-    end
-
-    def exists?
-      File.exists? path
-    end
-
     def contents
-      @contents ||= File.open(path).read
-    rescue Errno::ENOENT
+      @contents ||= begin
+        tree = repo.head.target.tree
+        blob = repo.lookup tree.path(path)[:oid]
+        blob.content
+      end
+    rescue Rugged::ReferenceError, Rugged::TreeError
       nil
     end
 
     def write
-      mkdir
-      File.write(path, contents)
-      commit
+      clean_path
+      oid = repo.write contents, :blob
+      index = repo.index
+      index.read_tree(repo.head.target.tree) unless repo.empty?
+      index.add(:path => path, :oid => oid, :mode => 0100644)
+
+      options = {}
+      options[:tree] = index.write_tree(repo)
+      options[:message] ||= "Updating #{path}"
+      options[:parents] = repo.empty? ? [] : [ repo.head.target ]
+      options[:update_ref] = 'HEAD'
+
+      Rugged::Commit.create(repo, options)
     end
 
-    def commit
-      # stage
-      index = repo.index
-      index.add path: key,
-        oid: (Rugged::Blob.from_workdir repo, key),
-        mode: 0100644
-      commit_tree = index.write_tree repo
-      index.write
-
-      # commit
+    def delete(file=path)
+      repo.index.remove(file)
+      commit_tree = repo.index.write_tree repo
       Rugged::Commit.create repo,
-        message: "Updating #{key}",
-        parents: repo.empty? ? [] : [ repo.head.target ].compact,
+        message: "Removing #{path}",
+        parents: [repo.head.target],
         tree: commit_tree,
         update_ref: 'HEAD'
     end
 
-    def delete
-      File.delete path
-      repo.index.remove(key)
-    end
-
     def inspect
-      "#<ChangeAgent::Document key=\"#{key}\">"
+      "#<ChangeAgent::Document path=\"#{path}\">"
     end
 
     private
 
-    def base_dir_regex
-      Regexp.new('^' + Regexp.escape(base_dir) + "/")
-    end
-
-    def path_in_repo?
-      path.match base_dir_regex
-    end
-
-    # Similar to mkdir_p, but removes files in the path
-    # this avoids namespace conflicts
-    def mkdir
-      return if File.file? path
+    def clean_path
+      return if repo.empty?
       dirs = []
-      relative_path = path.gsub base_dir_regex, ""
-      relative_path.split("/").each do |part|
-        dirs.push part
-        file = File.expand_path(dirs.join("/"), tempdir)
-        if File.file? file
-          File.delete file
-          repo.index.remove(dirs.join("/"))
-        end
+      tree = repo.head.target.tree
+      path.split("/").each do |part|
+        file = dirs.push(part).join("/")
+        delete(file) if tree.path(file)
       end
-      FileUtils.mkdir_p directory
+    rescue Rugged::TreeError
+      nil
     end
   end
 end

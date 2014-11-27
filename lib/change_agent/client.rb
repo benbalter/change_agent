@@ -4,17 +4,14 @@ module ChangeAgent
     attr_accessor :directory
 
     def initialize(directory=nil, remote=nil)
-      @directory = File.realpath(directory || Dir.pwd)
+      @directory = File.expand_path(directory || Dir.pwd)
       @remote = remote
     end
 
     def repo
-      # Git repo already exists, don't do anything but load it
-      @repo ||= Rugged::Repository.new directory
-    rescue Rugged::RepositoryError
-      if @remote.nil? # init a new repo at the given path
+      if @remote.nil?
         @repo ||= Rugged::Repository.init_at directory
-      else # Clone a repo from a remote
+      else
         @repo ||= Rugged::Repository.clone_at @remote, directory
       end
     end
