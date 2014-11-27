@@ -48,6 +48,8 @@ module ChangeAgent
         parents: [repo.head.target],
         tree: repo.index.write_tree(repo),
         update_ref: 'HEAD'
+    rescue Rugged::IndexError
+      false
     end
 
     def inspect
