@@ -19,7 +19,8 @@ module ChangeAgent
     def set(key, value)
       document = Document.new(key, self)
       document.contents = value
-      document.write
+      return unless document.changed?
+      document.save
       document
     end
 

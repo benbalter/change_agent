@@ -78,4 +78,14 @@ class TestChangeAgentDocument < Minitest::Test
     doc.write
     assert_equal "baz2", @client.get("foo/bar2")
   end
+
+  should "know if a file's changed" do
+    refute @document.changed?
+    
+    @client.set "foo", "bar"
+    refute @document.changed?
+
+    @document.contents = "baz"
+    assert @document.changed?
+  end
 end

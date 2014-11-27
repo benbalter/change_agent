@@ -58,4 +58,11 @@ class TestChangeAgentClient < Minitest::Test
   should "not err on an unknown value" do
     refute @client.get "does/not/exist"
   end
+
+  should "not double save a document" do
+    @client.set "foo", "bar"
+    sha = @client.repo.last_commit.oid
+    @client.set "foo", "bar"
+    assert_equal sha, @client.repo.last_commit.oid
+  end
 end

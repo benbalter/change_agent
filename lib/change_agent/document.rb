@@ -19,16 +19,14 @@ module ChangeAgent
     end
 
     def contents
-      @contents ||= begin
-        tree = repo.head.target.tree
-        blob = repo.lookup tree.path(path)[:oid]
-        blob.content
-      end
-    rescue Rugged::ReferenceError, Rugged::TreeError
-      nil
+      @contents ||= blob_contents
     end
 
-    def write
+    def changed?
+      contents != blob_contents
+    end
+
+    def save
       clean_path
       oid = repo.write contents, :blob
       repo.index.add(path: path, oid: oid, mode: 0100644)
@@ -39,6 +37,7 @@ module ChangeAgent
         tree: repo.index.write_tree(repo),
         update_ref: 'HEAD'
     end
+    alias_method :write, :save
 
     def delete(file=path)
       repo.index.remove(file)
@@ -67,6 +66,14 @@ module ChangeAgent
         delete(file) if tree.path(file) && tree.path(file)[:type] == :blob
       end
     rescue Rugged::TreeError
+      nil
+    end
+
+    def blob_contents
+      tree = repo.head.target.tree
+      blob = repo.lookup tree.path(path)[:oid]
+      blob.content
+    rescue Rugged::ReferenceError, Rugged::TreeError
       nil
     end
   end
