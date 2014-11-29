@@ -33,24 +33,28 @@ class TestChangeAgentDocument < Minitest::Test
   should "read a file's contents" do
     @document.contents = "bar"
     @document.write
+    @document.contents = nil # prevent caching
     assert_equal "bar", @document.contents
   end
 
   should "write a file's contents" do
     @document.contents = "bar"
     @document.write
+    @document.contents = nil # prevent caching
     assert_equal "bar", @client.get("foo")
   end
 
   should "commit the document to the repo" do
     @document.contents = "bar"
     @document.write
+    @document.contents = nil # prevent caching
     assert_equal "Updating #{@document.key}", @document.repo.last_commit.message
   end
 
   should "delete the document" do
     @document.contents = "bar"
     @document.write
+    @document.contents = nil # prevent caching
     assert @client.get "foo"
     @document.delete
     refute @client.get "foo"
@@ -61,11 +65,13 @@ class TestChangeAgentDocument < Minitest::Test
     doc = ChangeAgent::Document.new("foo/bar", @client)
     doc.contents = "baz"
     doc.write
+    doc.contents = nil # prevent caching
     assert_equal "baz", @client.get("foo/bar")
 
     doc = ChangeAgent::Document.new("foo/bar2", @client)
     doc.contents = "baz2"
     doc.write
+    doc.contents = nil # prevent caching
     assert_equal "baz2", @client.get("foo/bar2")
   end
 
