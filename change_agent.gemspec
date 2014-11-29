@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = ChangeAgent::VERSION
   spec.authors       = ["Ben Balter"]
   spec.email         = ["ben.balter@github.com"]
-  spec.summary       = %q{A Git-backed key-value store, for tracking changes to documents and other files over time.}
+  spec.summary       = "A Git-backed key-value store, for tracking changes to documents and other files over time."
   spec.homepage      = "https://github.com/benbalter/change-agent"
   spec.license       = "MIT"
 
