@@ -4,11 +4,21 @@ module ChangeAgent
     class MergeConflict < StandardError; end
     class MissingRemote < ArgumentError; end
 
-    attr_accessor :credentials
+    attr_writer :credentials
 
     DEFAULT_REMOTE = "origin"
     DEFAULT_REMOTE_BRANCH = "origin/master"
     DEFAULT_LOCAL_REF = "refs/heads/master"
+
+    # Default to token-based credentials passed as GITHUB_TOKEN
+    # Can be over ridden by overwritting @credentials with a
+    # different Rugged Credentialing method
+    def credentials
+      @credentials ||= Rugged::Credentials::UserPassword.new({
+         :username => "x-oauth-basic",
+         :password => ENV["GITHUB_TOKEN"]
+      })
+    end
 
     # Helper method to return all remots
     def remotes

@@ -52,4 +52,11 @@ class TestChangeAgentSync < Minitest::Test
     assert_equal "Merged `origin/master` into `master`", @demo.repo.last_commit.message
     assert head != @demo.repo.head.target.oid
   end
+
+  should "init credentials" do
+    ENV["GITHUB_TOKEN"] = "foo"
+    assert_equal Rugged::Credentials::UserPassword, @client.credentials.class
+    assert_equal "x-oauth-basic", @client.credentials.instance_variable_get("@username")
+    assert_equal "foo", @client.credentials.instance_variable_get("@password")
+  end
 end

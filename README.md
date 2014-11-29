@@ -76,11 +76,13 @@ change_agent.sync
 
 ### Authentication
 
-Rugged supports authentication via user/pass and sshkey. For more information see [Rugged](https://github.com/libgit2/rugged/blob/master/lib/rugged/credentials.rb). Here's an example of how you might implement authentication for pushes and pulling from private remotes.
+By default, Change Agent supports [token-bassed authentication](https://github.com/blog/1270-easier-builds-and-deployments-using-git-over-https-and-oauth). Simply pass an OAuth token via the `GITHUB_TOKEN` environmental variable and ensure all remotes use the `https` protocol. Change Agent will take care of the rest. You'll likely want to use a bot account for this.
+
+Rugged supports authentication additional authentication strategies (such as ssh key). For more information see [Rugged](https://github.com/libgit2/rugged/blob/master/lib/rugged/credentials.rb). Here's an example of how you might implement an alternative authentication mechanism:
 
 ```ruby
 change_agent = ChangeAgent::Client.new "data", "https://github.com/benbalter/change_agent_demo"
-creds = Rugged:Credentials::UserPassword.new :username => "benbalter", :password => "passw0rd"
+creds = Rugged::Credentials::UserPassword.new :username => "benbalter", :password => "passw0rd"
 change_agent.credentials = creds
 ```
 
