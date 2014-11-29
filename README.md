@@ -33,7 +33,7 @@ change_agent.get "foo"
 
 ### Namespaced usage
 
-Keys (files) are intended to be namespaced when logically grouped. In the above example, if you were storing congressional press releases, you might store Rep. Balter's Nov 26th press release on puppies as "balter/2014/11/26/puppies.html", or just "balter/2014-11-26-puppies.txt" or even just "balter/puppies".
+Keys (files) are intended to be namespaced when logically grouped. In the above example, if you were storing congressional press releases, you might store Rep. Balter's Nov 26th press release on puppies as `balter/2014/11/26/puppies.html`, or just `balter/2014-11-26-puppies.txt` or even just `balter/puppies`.
 
 ```ruby
 change_agent.set "foo/bar", "baz"
@@ -78,7 +78,7 @@ change_agent.sync
 
 By default, Change Agent supports [token-bassed authentication](https://github.com/blog/1270-easier-builds-and-deployments-using-git-over-https-and-oauth). Simply pass an OAuth token via the `GITHUB_TOKEN` environmental variable and ensure all remotes use the `https` protocol. Change Agent will take care of the rest. You'll likely want to use a bot account for this.
 
-Rugged supports authentication additional authentication strategies (such as ssh key). For more information see [Rugged](https://github.com/libgit2/rugged/blob/master/lib/rugged/credentials.rb). Here's an example of how you might implement an alternative authentication mechanism:
+Rugged supports additional authentication strategies (such as ssh key). For more information see [Rugged](https://github.com/libgit2/rugged/blob/master/lib/rugged/credentials.rb). Here's an example of how you might implement an alternative authentication mechanism:
 
 ```ruby
 change_agent = ChangeAgent::Client.new "data", "https://github.com/benbalter/change_agent_demo"
