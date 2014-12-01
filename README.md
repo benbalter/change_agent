@@ -16,7 +16,7 @@ Want to see it in action? Check out [this lightweight demo](https://github.com/b
 
 ## Okay, I'm sold. How do I use it?
 
-ChangeAgent writes values to the file system based on a given key, and immediately commits the file to Git, providing you with both a snapshot and a timestamp for every change.
+ChangeAgent writes values directly to the Git database based on a given key (path), and immediately triggers a commit, providing you with both a snapshot and a timestamp for every change.
 
 ### Basic usage
 
