@@ -59,7 +59,7 @@ module ChangeAgent
     def blob_contents
       tree = repo.head.target.tree
       blob = repo.lookup tree.path(path)[:oid]
-      blob.content
+      blob.content.force_encoding("UTF-8")
     rescue Rugged::ReferenceError, Rugged::TreeError
       nil
     end
