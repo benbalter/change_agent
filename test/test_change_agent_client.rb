@@ -65,4 +65,9 @@ class TestChangeAgentClient < Minitest::Test
     @client.set "foo", "bar"
     assert_equal sha, @client.repo.last_commit.oid
   end
+
+  should "save UTF-8 encoded values" do
+    @client.set "foo", "§"
+    assert_equal "§", @client.get("foo")
+  end
 end
