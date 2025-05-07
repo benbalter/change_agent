@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'helper'
 
 class TestChangeAgentClient < Minitest::Test
@@ -27,7 +29,7 @@ class TestChangeAgentClient < Minitest::Test
 
   should 'init the git object' do
     assert_equal Rugged::Repository, @client.repo.class
-    assert_equal tempdir + '/.git/', @client.repo.path
+    assert_equal "#{tempdir}/.git/", @client.repo.path
   end
 
   should 'store a value' do

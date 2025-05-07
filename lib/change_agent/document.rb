@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ChangeAgent
   class Document
     attr_writer :contents
@@ -6,7 +8,7 @@ module ChangeAgent
 
     def initialize(path, client_or_directory = nil)
       @path = path
-      @client = if client_or_directory.class == ChangeAgent::Client
+      @client = if client_or_directory.instance_of?(ChangeAgent::Client)
                   client_or_directory
                 else
                   ChangeAgent::Client.new(client_or_directory)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ChangeAgent
   module Sync
     class MergeConflict < StandardError; end
@@ -31,7 +33,7 @@ module ChangeAgent
 
     # Does the current repo have at least a single remote?
     def has_remotes?
-      remotes.count > 0
+      remotes.count.positive?
     end
 
     # Push to a remote

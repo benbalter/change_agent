@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'change_agent/version'
 require_relative 'change_agent/document'
 require_relative 'change_agent/sync'

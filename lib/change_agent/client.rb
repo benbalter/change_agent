@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ChangeAgent
   class Client
     include ChangeAgent::Sync
