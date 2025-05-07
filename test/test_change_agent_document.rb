@@ -20,11 +20,11 @@ class TestChangeAgentDocument < Minitest::Test
 
   should 'accept a client if passed' do
     doc = ChangeAgent::Document.new('foo', ChangeAgent::Client.new)
-    assert_equal ChangeAgent::Client, doc.instance_variable_get('@client').class
+    assert_equal ChangeAgent::Client, doc.instance_variable_get(:@client).class
   end
 
   should 'build a client from a directory' do
-    assert_equal ChangeAgent::Client, @document.instance_variable_get('@client').class
+    assert_equal ChangeAgent::Client, @document.instance_variable_get(:@client).class
   end
 
   should 'expose the git client' do

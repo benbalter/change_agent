@@ -44,7 +44,8 @@ module ChangeAgent
     def push(options = {})
       raise MissingRemote unless has_remotes?
 
-      options.merge! remote: DEFAULT_REMOTE, ref: DEFAULT_LOCAL_REF
+      options[:remote] = DEFAULT_REMOTE
+      options[:ref] = DEFAULT_LOCAL_REF
       remotes[options[:remote]].push([options[:ref]], { credentials: credentials })
     end
 
@@ -64,7 +65,8 @@ module ChangeAgent
     #  :from   - the remote ref (default: "origin/master")
     #  :to     - the local ref  (default: "refs/heads/master")
     def merge(options = {})
-      options.merge! from: DEFAULT_REMOTE_BRANCH, to: DEFAULT_LOCAL_REF
+      options[:from] = DEFAULT_REMOTE_BRANCH
+      options[:to] = DEFAULT_LOCAL_REF
       theirs = repo.rev_parse options[:from]
       ours = repo.rev_parse options[:to]
 

@@ -57,7 +57,7 @@ class TestChangeAgentSync < Minitest::Test
   should 'init credentials' do
     ENV['GITHUB_TOKEN'] = 'foo'
     assert_equal Rugged::Credentials::UserPassword, @client.credentials.class
-    assert_equal 'x-oauth-basic', @client.credentials.instance_variable_get('@username')
-    assert_equal 'foo', @client.credentials.instance_variable_get('@password')
+    assert_equal 'x-oauth-basic', @client.credentials.instance_variable_get(:@username)
+    assert_equal 'foo', @client.credentials.instance_variable_get(:@password)
   end
 end
