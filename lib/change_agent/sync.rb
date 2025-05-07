@@ -17,7 +17,7 @@ module ChangeAgent
     def credentials
       @credentials ||= Rugged::Credentials::UserPassword.new({
                                                                username: 'x-oauth-basic',
-                                                               password: ENV['GITHUB_TOKEN']
+                                                               password: ENV.fetch('GITHUB_TOKEN', nil)
                                                              })
     end
 

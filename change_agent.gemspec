@@ -15,7 +15,6 @@ Gem::Specification.new do |spec|
 
   spec.files         = `git ls-files -z`.split("\x0")
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
-  spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
   spec.add_dependency 'dotenv', '>= 3.1', '< 4.0'
@@ -25,4 +24,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rake', '>= 13.0', '< 14.0'
   spec.add_development_dependency 'rubocop', '>= 1.0', '< 2.0'
   spec.add_development_dependency 'shoulda', '>= 4.0', '< 5.0'
+  spec.metadata['rubygems_mfa_required'] = 'true'
 end
