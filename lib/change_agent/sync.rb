@@ -52,7 +52,7 @@ module ChangeAgent
     #  remote - the name of the remote (default: origin)
     def fetch(remote=nil)
       raise MissingRemote unless has_remotes?
-      repo.fetch(remote || DEFAULT_REMOTE, {:credentials => credentials})
+      repo.fetch(remote || DEFAULT_REMOTE, credentials: credentials)
     end
 
     # Merge two refs
