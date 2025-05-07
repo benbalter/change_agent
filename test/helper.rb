@@ -6,7 +6,7 @@ require 'shoulda'
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 
 def tempdir
-  File.expand_path "./tmp", File.dirname(__FILE__)
+  File.expand_path './tmp', File.dirname(__FILE__)
 end
 
 def init_tempdir

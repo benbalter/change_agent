@@ -1,17 +1,16 @@
 module ChangeAgent
   class Document
-
     attr_writer :contents
     attr_accessor :path
-    alias_method :key, :path
+    alias key path
 
-    def initialize(path, client_or_directory=nil)
+    def initialize(path, client_or_directory = nil)
       @path = path
-      if client_or_directory.class == ChangeAgent::Client
-        @client = client_or_directory
-      else
-        @client = ChangeAgent::Client.new(client_or_directory)
-      end
+      @client = if client_or_directory.class == ChangeAgent::Client
+                  client_or_directory
+                else
+                  ChangeAgent::Client.new(client_or_directory)
+                end
     end
 
     def repo
@@ -28,24 +27,24 @@ module ChangeAgent
 
     def save
       oid = repo.write contents, :blob
-      repo.index.add(path: path, oid: oid, mode: 0100644)
+      repo.index.add(path: path, oid: oid, mode: 0o100644)
 
       Rugged::Commit.create repo,
-        message: "Updating #{path}",
-        parents: repo.empty? ? [] : [ repo.head.target ],
-        tree: repo.index.write_tree(repo),
-        update_ref: 'HEAD'
+                            message: "Updating #{path}",
+                            parents: repo.empty? ? [] : [repo.head.target],
+                            tree: repo.index.write_tree(repo),
+                            update_ref: 'HEAD'
     end
-    alias_method :write, :save
+    alias write save
 
-    def delete(file=path)
+    def delete(file = path)
       repo.index.remove(file)
 
       Rugged::Commit.create repo,
-        message: "Removing #{path}",
-        parents: [repo.head.target],
-        tree: repo.index.write_tree(repo),
-        update_ref: 'HEAD'
+                            message: "Removing #{path}",
+                            parents: [repo.head.target],
+                            tree: repo.index.write_tree(repo),
+                            update_ref: 'HEAD'
     rescue Rugged::IndexError
       false
     end
@@ -59,7 +58,7 @@ module ChangeAgent
     def blob_contents
       tree = repo.head.target.tree
       blob = repo.lookup tree.path(path)[:oid]
-      blob.content.force_encoding("UTF-8")
+      blob.content.force_encoding('UTF-8')
     rescue Rugged::ReferenceError, Rugged::TreeError
       nil
     end

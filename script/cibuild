@@ -9,4 +9,6 @@ fi
 
 bundle exec rake test
 
+bundle exec rubocop
+
 rm -Rf tmp

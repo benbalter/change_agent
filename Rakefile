@@ -1,6 +1,6 @@
 require 'rake'
 require 'rake/testtask'
-require "bundler/gem_tasks"
+require 'bundler/gem_tasks'
 
 Rake::TestTask.new(:test) do |test|
   test.libs << 'lib' << 'test'
@@ -8,7 +8,7 @@ Rake::TestTask.new(:test) do |test|
   test.verbose = true
 end
 
-desc "Open console with Change Agent loaded"
+desc 'Open console with Change Agent loaded'
 task :console do
-  exec "pry -r ./lib/change_agent.rb"
+  exec 'pry -r ./lib/change_agent.rb'
 end

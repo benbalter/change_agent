@@ -1,7 +1,6 @@
 require 'helper'
 
 class TestChangeAgent < Minitest::Test
-
   def setup
     init_tempdir
   end
@@ -10,7 +9,7 @@ class TestChangeAgent < Minitest::Test
     FileUtils.rm_rf tempdir
   end
 
-  should "return a ChangeAgent::Client" do
+  should 'return a ChangeAgent::Client' do
     assert_equal ChangeAgent::Client, ChangeAgent.init(tempdir).class
   end
 end
