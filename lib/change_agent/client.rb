@@ -3,6 +3,7 @@
 module ChangeAgent
   class Client
     include ChangeAgent::Sync
+
     attr_accessor :directory
 
     def initialize(directory = nil, remote = nil)

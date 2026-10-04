@@ -33,7 +33,7 @@ module ChangeAgent
 
     # Does the current repo have at least a single remote?
     def has_remotes?
-      remotes.count.positive?
+      remotes.any?
     end
 
     # Push to a remote
