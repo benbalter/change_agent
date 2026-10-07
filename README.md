@@ -2,7 +2,7 @@
 
 *A Git-backed key-value store, for tracking changes to documents and other files over time.*
 
-[![Gem Version](https://badge.fury.io/rb/change_agent.svg)](http://badge.fury.io/rb/change_agent) [![Build Status](https://travis-ci.org/benbalter/change_agent.svg)](https://travis-ci.org/benbalter/change_agent)
+[![Gem Version](https://badge.fury.io/rb/change_agent.svg)](http://badge.fury.io/rb/change_agent) [![Build Status](https://github.com/benbalter/change_agent/actions/workflows/ci.yml/badge.svg)](https://github.com/benbalter/change_agent/actions/workflows/ci.yml)
 
 ### A git-backed key value store sounds like a terrible idea. Why would you do that?
 

@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Ben Balter']
   spec.email         = ['ben.balter@github.com']
   spec.summary       = 'A Git-backed key-value store, for tracking changes to documents and other files over time.'
-  spec.homepage      = 'https://github.com/benbalter/change-agent'
+  spec.homepage      = 'https://github.com/benbalter/change_agent'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0")
