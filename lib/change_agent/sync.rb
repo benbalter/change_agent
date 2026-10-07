@@ -31,6 +31,12 @@ module ChangeAgent
       remotes.create name, url
     end
 
+    # Keep a caller-supplied option, falling back to the documented
+    # default only when it's missing
+    def with_default(options, key, default)
+      options[key] ||= default
+    end
+
     # Does the current repo have at least a single remote?
     def has_remotes?
       remotes.any?
@@ -44,9 +50,9 @@ module ChangeAgent
     def push(options = {})
       raise MissingRemote unless has_remotes?
 
-      options[:remote] = DEFAULT_REMOTE
-      options[:ref] = DEFAULT_LOCAL_REF
-      remotes[options[:remote]].push([options[:ref]], { credentials: credentials })
+      options[:remote] ||= DEFAULT_REMOTE
+      options[:ref] ||= DEFAULT_LOCAL_REF
+      remotes[options[:remote]].push([options[:ref]], credentials: credentials)
     end
 
     # Fetch a remote
@@ -65,8 +71,8 @@ module ChangeAgent
     #  :from   - the remote ref (default: "origin/master")
     #  :to     - the local ref  (default: "refs/heads/master")
     def merge(options = {})
-      options[:from] = DEFAULT_REMOTE_BRANCH
-      options[:to] = DEFAULT_LOCAL_REF
+      with_default options, :from, DEFAULT_REMOTE_BRANCH
+      with_default options, :to, DEFAULT_LOCAL_REF
       theirs = repo.rev_parse options[:from]
       ours = repo.rev_parse options[:to]
 

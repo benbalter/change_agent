@@ -60,4 +60,59 @@ class TestChangeAgentSync < Minitest::Test
     assert_equal 'x-oauth-basic', @client.credentials.instance_variable_get(:@username)
     assert_equal 'foo', @client.credentials.instance_variable_get(:@password)
   end
+
+  should 'merge from a custom :from ref' do
+    work = ChangeAgent::Client.new File.join(tempdir, 'work')
+    pin_to_master work
+    work.set 'local', 'local value'
+
+    bare_path = File.join tempdir, 'upstream.git'
+    Rugged::Repository.init_at bare_path, :bare
+    work.add_remote 'origin', bare_path
+    work.push
+
+    other = ChangeAgent::Client.new File.join(tempdir, 'other')
+    pin_to_master other
+    other.add_remote 'origin', bare_path
+    other.fetch
+    other.repo.reset 'origin/master', :hard
+    other.set 'remote', 'remote value'
+    other.push
+
+    work.add_remote 'upstream', bare_path
+    work.fetch 'upstream'
+    work.merge from: 'upstream/master'
+
+    assert_equal 'remote value', work.get('remote')
+    assert_equal 'local value', work.get('local')
+  end
+
+  should 'push to a custom :remote' do
+    work = ChangeAgent::Client.new File.join(tempdir, 'work')
+    pin_to_master work
+    work.set 'local', 'local value'
+
+    origin_path = File.join tempdir, 'origin.git'
+    upstream_path = File.join tempdir, 'upstream.git'
+    Rugged::Repository.init_at origin_path, :bare
+    Rugged::Repository.init_at upstream_path, :bare
+    work.add_remote 'origin', origin_path
+    work.add_remote 'upstream', upstream_path
+
+    work.push remote: 'upstream'
+
+    upstream = Rugged::Repository.new upstream_path
+    assert_equal work.repo.head.target.oid, upstream.rev_parse('refs/heads/master').oid
+    assert_raises Rugged::ReferenceError do
+      Rugged::Repository.new(origin_path).rev_parse 'refs/heads/master'
+    end
+  end
+
+  private
+
+  # libgit2 follows the global init.defaultBranch; pin the repo to master
+  # so the hardcoded refs/heads/master refspec always matches
+  def pin_to_master(client)
+    File.write File.join(client.repo.path, 'HEAD'), "ref: refs/heads/master\n"
+  end
 end
