@@ -15,10 +15,10 @@ module ChangeAgent
     # Can be over ridden by overwritting @credentials with a
     # different Rugged Credentialing method
     def credentials
-      @credentials ||= Rugged::Credentials::UserPassword.new({
-                                                               username: 'x-oauth-basic',
-                                                               password: ENV.fetch('GITHUB_TOKEN', nil)
-                                                             })
+      @credentials ||= Rugged::Credentials::UserPassword.new(
+        username: 'x-oauth-basic',
+        password: ENV.fetch('GITHUB_TOKEN', nil)
+      )
     end
 
     # Helper method to return all remots
@@ -84,12 +84,11 @@ module ChangeAgent
 
       raise MergeConflict if index.conflicts?
 
-      Rugged::Commit.create(repo, {
-                              parents: [ours, theirs],
-                              tree: index.write_tree(repo),
-                              message: "Merged `#{options[:from]}` into `#{options[:to].sub('refs/heads/', '')}`",
-                              update_ref: options[:to]
-                            })
+      Rugged::Commit.create(repo,
+                            parents: [ours, theirs],
+                            tree: index.write_tree(repo),
+                            message: "Merged `#{options[:from]}` into `#{options[:to].sub('refs/heads/', '')}`",
+                            update_ref: options[:to])
     end
 
     # Fetch a remote and merge

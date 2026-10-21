@@ -15,7 +15,7 @@ module ChangeAgent
       @repo ||= if @remote.nil?
                   Rugged::Repository.init_at directory
                 else
-                  Rugged::Repository.clone_at @remote, directory, { credentials: credentials }
+                  Rugged::Repository.clone_at @remote, directory, credentials: credentials
                 end
     end
 
