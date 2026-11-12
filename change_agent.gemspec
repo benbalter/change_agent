@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'dotenv', '>= 3.1', '< 4.0'
   spec.add_dependency 'rugged', '>= 1.9', '< 2.0'
-  spec.add_development_dependency 'bundler', '>= 2.0', '< 3.0'
+  spec.add_development_dependency 'bundler', '>= 2.0', '< 4.0.25'
   spec.add_development_dependency 'pry', '>= 0.15', '< 1.0'
   spec.add_development_dependency 'rake', '>= 13.0', '< 14.0'
   spec.add_development_dependency 'rubocop', '>= 1.0', '< 2.0'
